@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>花卉資源管理中心 | Flower Hub</title>
+    <style>
+        :root {
+            --primary: #2e7d32;
+            --primary-light: #e8f5e9;
+            --blue: #2196f3;
+            --orange: #ff9800;
+            --danger: #f44336;
+            --bg: #f4f7f6;
+            --white-node: #9e9e9e;
+            --yellow-node: #fbc02d;
+            --red-node: #e53935;
+            --blue-node: #1e88e5;
+        }
+
+        body { font-family: -apple-system, "Noto Sans TC", sans-serif; background-color: var(--bg); margin: 0; color: #333; line-height: 1.6; }
+        
+        /* 導航欄 */
+        nav { background: #fff; padding: 10px 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
+        .logo { font-size: 1.2rem; font-weight: bold; color: var(--primary); display: flex; align-items: center; gap: 8px; }
+        
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 15px; }
+
+        /* 歡迎區塊 */
+        .hero { background: linear-gradient(135deg, #2e7d32 0%, #66bb6a 100%); color: white; padding: 30px; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(46,125,50,0.2); }
+        .hero h1 { margin: 0 0 10px 0; font-size: 1.8rem; }
+        .hero p { margin: 0; opacity: 0.9; font-size: 0.95rem; }
+
+        /* 功能卡片佈局 */
+        .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px; }
+        @media (max-width: 768px) { .main-grid { grid-template-columns: 1fr; } }
+
+        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border: 1px solid #eee; }
+        .card-title { font-weight: bold; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; font-size: 1.1rem; }
+
+        /* AI 區塊 */
+        .instruction-box { background: #fff9f0; border-left: 4px solid var(--orange); padding: 12px; margin-bottom: 15px; border-radius: 4px; font-size: 0.85rem; }
+        textarea { width: 100%; height: 100px; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-family: monospace; font-size: 13px; box-sizing: border-box; resize: vertical; }
+        
+        /* 儀表板 */
+        .stat-main { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .progress-bar-bg { width: 100%; background: #eee; height: 12px; border-radius: 6px; overflow: hidden; margin: 10px 0; }
+        .progress-bar-fill { height: 100%; background: #4caf50; width: 0%; transition: width 0.6s; }
+        
+        .color-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .color-item { padding: 10px; border-radius: 8px; background: #fafafa; border: 1px solid #f0f0f0; display: flex; flex-direction: column; align-items: center; }
+        .color-item.c-white { border-top: 3px solid var(--white-node); }
+        .color-item.c-yellow { border-top: 3px solid var(--yellow-node); }
+        .color-item.c-red { border-top: 3px solid var(--red-node); }
+        .color-item.c-blue { border-top: 3px solid var(--blue-node); }
+
+        /* 表格區塊 */
+        .table-card { background: white; border-radius: 12px; padding: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); overflow: hidden; }
+        .table-wrapper { overflow-x: auto; max-height: 500px; }
+        table { width: 100%; border-collapse: collapse; min-width: 1000px; }
+        th, td { border: 1px solid #eee; text-align: center; padding: 8px 4px; font-size: 0.9rem; }
+        th { background: #f9f9f9; position: sticky; top: 0; z-index: 10; }
+        .name-td { font-weight: bold; background: #fff; position: sticky; left: 0; z-index: 5; border-right: 2px solid #eee; width: 110px; }
+        
+        input[type="number"] { width: 80%; border: 1px solid transparent; background: #f5f5f5; text-align: center; padding: 4px; border-radius: 4px; }
+        input[type="number"]:focus { background: white; border: 1px solid var(--blue); outline: none; }
+        .owned-cell { background-color: var(--primary-light) !important; }
+
+        /* 按鈕樣式 */
+        .btn { padding: 10px 16px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; transition: 0.3s; font-size: 0.9rem; }
+        .btn-orange { background: var(--orange); color: white; }
+        .btn-blue { background: var(--blue); color: white; width: 100%; margin-top: 10px; }
+        .btn-purple { background: #673ab7; color: white; flex: 1; }
+        .btn-red { background: var(--danger); color: white; flex: 1; }
+        .btn-reset { background: #f5f5f5; color: #666; font-size: 0.8rem; }
+        .btn:hover { filter: brightness(0.9); transform: translateY(-1px); }
+
+        .tag-box { margin-top: 15px; padding: 10px; background: #fff5f5; border-radius: 8px; border: 1px solid #ffdada; }
+        .tag { display: inline-block; background: white; border: 1px solid #ffcdd2; color: #c62828; padding: 2px 10px; border-radius: 15px; font-size: 0.75rem; margin: 2px; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="logo">🌸 Pikmin Flower Hub</div>
+    <button class="btn btn-reset" onclick="resetData()">重設所有資料</button>
+</nav>
+
+<div class="container">
+    <div class="hero">
+        <h1>您好，探險者！</h1>
+        <p>歡迎來到您的花卉資源指揮中心。在這裡您可以追蹤精華與花瓣數量，利用 AI 快速同步遊戲進度。</p>
+    </div>
+
+    <div class="main-grid">
+        <div class="card">
+            <div class="card-title">🤖 AI 智慧同步</div>
+            <div class="instruction-box">
+                <span id="prompt-text">請幫我讀取這張圖，並輸出 JSON 代碼。規範：1. 格式為 `[{"n":"花名","c":"白/黃/紅/藍","f":精華數,"e":花瓣數}]`。 2. <b>花名(n) 必須移除前面的顏色字眼</b>。 3. 顏色(c) 只能用單字：白、黃、紅、藍。 4. 請只輸出 JSON。</span>
+            </div>
+            <button class="btn btn-orange" onclick="copyPrompt()">📋 複製 AI 辨識指令</button>
+            <textarea id="import-json" placeholder="將 AI 回傳的代碼貼在這裡..." style="margin-top:15px;"></textarea>
+            <div style="display:flex; gap:10px; margin-top:10px;">
+                <button class="btn btn-purple" onclick="pasteFromClipboard()">📥 一鍵貼上</button>
+                <button class="btn btn-red" onclick="clearTextarea()">🗑️ 清除</button>
+            </div>
+            <button class="btn btn-blue" onclick="importData()">🚀 導入更新並計算進度</button>
+        </div>
+
+        <div class="card">
+            <div class="card-title">📊 收集進度統計</div>
+            <div class="stat-main">
+                <div>
+                    <span style="font-size: 2rem; font-weight: bold; color: var(--primary);" id="stat-percent">0%</span>
+                    <br><small id="stat-count" style="color:#888;">0 / 0</small>
+                </div>
+                <div class="progress-bar-bg" style="width: 150px;"><div id="progress-bar" class="progress-bar-fill"></div></div>
+            </div>
+            
+            <div class="color-grid">
+                <div class="color-item c-white"><small>白色</small><b id="cs-val-白">0%</b></div>
+                <div class="color-item c-yellow"><small>黃色</small><b id="cs-val-黃">0%</b></div>
+                <div class="color-item c-red"><small>紅色</small><b id="cs-val-紅">0%</b></div>
+                <div class="color-item c-blue"><small>藍色</small><b id="cs-val-藍">0%</b></div>
+            </div>
+
+            <div class="tag-box">
+                <div style="font-size: 0.85rem; font-weight: bold; color: #d32f2f; margin-bottom: 5px;">缺少清單：</div>
+                <div id="missing-tags"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-card">
+        <div class="card-title">📝 詳細資源清單</div>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th rowspan="2">花卉名稱
