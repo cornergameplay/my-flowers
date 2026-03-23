@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>花卉資源管理中心 | Flower Hub</title>
-    <script src="[https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js](https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js)"></script>
-    <script src="[https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js](https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js)"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         :root {
             --primary: #2e7d32; --primary-light: #e8f5e9; --blue: #2196f3;
@@ -27,12 +27,11 @@
         .card-title { font-weight: bold; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; font-size: 1.1rem; }
 
         .notice-box { background: #fff5f5; border: 1px solid #ffdede; padding: 12px; border-radius: 8px; margin-bottom: 15px; font-size: 0.85rem; color: #c62828; }
+        .notice-box ul { margin: 5px 0 0 20px; padding: 0; }
         .instruction-box { background: #fff9f0; border-left: 4px solid var(--orange); padding: 12px; margin-bottom: 15px; border-radius: 4px; font-size: 0.85rem; }
         
-        /* 貼上區域強化 */
         textarea { width: 100%; height: 110px; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-family: monospace; font-size: 13px; box-sizing: border-box; transition: all 0.3s; }
         textarea:focus { border-color: var(--blue); outline: none; background: #fff; }
-        .textarea-highlight { border-color: var(--purple) !important; background: #f3e5f5 !important; }
 
         .stat-main { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .progress-bar-bg { width: 100%; background: #eee; height: 12px; border-radius: 6px; overflow: hidden; margin: 10px 0; }
@@ -45,7 +44,7 @@
         .toolbar { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
         .table-wrapper { overflow-x: auto; max-height: 600px; border: 1px solid #eee; border-radius: 8px; position: relative; background: white; }
 
-        table { width: 100%; border-collapse: collapse; min-width: 1000px; background: white; }
+        table { width: 100%; border-collapse: collapse; min-width: 1100px; background: white; }
         th, td { border: 1px solid #eee; text-align: center; padding: 8px 4px; font-size: 0.9rem; }
         th { background: #f9f9f9; position: sticky; top: 0; z-index: 10; }
         .name-td { font-weight: bold; background: #fff; position: sticky; left: 0; z-index: 5; border-right: 2px solid #eee; width: 110px; }
@@ -75,8 +74,8 @@
 
 <div class="container">
     <div class="hero">
-        <h1>您好，探險者！</h1>
-        <p>追蹤精華與花瓣數據，貼入 AI 代碼即可快速同步進度。</p>
+        <h1>您好，皮克敏中毒玩家！</h1>
+        <p>追蹤精華與花瓣數據。同步 AI 代碼後，您可以下載與網站排版一致的 Excel 檔案或完整截圖。</p>
     </div>
 
     <div class="main-grid">
@@ -86,14 +85,15 @@
                 <b>📸 辨識注意事項：</b>
                 <ul>
                     <li>照片上限 10 張。建議依顏色分類截圖。</li>
-                    <li>截圖文字請完整顯示，請勿裁切。</li>
+                    <li>截圖文字請完整顯示，請勿裁切或擋到。</li>
+                    <li>若精華 0 且截圖未顯示該花，系統將判定為無。</li>
                 </ul>
             </div>
             <div class="instruction-box">
                 <span id="prompt-text">請幫我讀取這張圖，並輸出 JSON 代碼。規範：1. 格式為 `[{"n":"花名","c":"白/黃/紅/藍","f":精華數,"e":花瓣數}]`。 2. 花名(n) 必須移除前面的顏色字眼。 3. 顏色(c) 只能用單字：白、黃、紅、藍。 4. 請只輸出 JSON。</span>
             </div>
             <button class="btn btn-orange" id="copy-btn" onclick="copyPrompt()">📋 複製 AI 辨識指令</button>
-            <textarea id="import-json" placeholder="點擊下方一鍵貼上，或長按此處手動貼上..."></textarea>
+            <textarea id="import-json" placeholder="點擊下方貼入，或長按此處手動貼上 AI 代碼..."></textarea>
             <div style="display:flex; gap:10px; margin-top:10px;">
                 <button class="btn btn-purple" id="paste-btn" onclick="pasteFromClipboard()">📥 一鍵貼上</button>
                 <button class="btn btn-red" onclick="clearTextarea()">🗑️ 清除</button>
@@ -108,10 +108,10 @@
                 <div class="progress-bar-bg" style="width: 150px;"><div id="progress-bar" class="progress-bar-fill"></div></div>
             </div>
             <div class="color-grid">
-                <div class="color-item c-white"><small>白色</small><br><b id="cs-val-白">0%</b></div>
-                <div class="color-item c-yellow"><small>黃色</small><br><b id="cs-val-黃">0%</b></div>
-                <div class="color-item c-red"><small>紅色</small><br><b id="cs-val-紅">0%</b></div>
-                <div class="color-item c-blue"><small>藍色</small><br><b id="cs-val-藍">0%</b></div>
+                <div class="color-item c-white"><small>白色完成度</small><br><b id="cs-val-白">0%</b></div>
+                <div class="color-item c-yellow"><small>黃色完成度</small><br><b id="cs-val-黃">0%</b></div>
+                <div class="color-item c-red"><small>紅色完成度</small><br><b id="cs-val-紅">0%</b></div>
+                <div class="color-item c-blue"><small>藍色完成度</small><br><b id="cs-val-藍">0%</b></div>
             </div>
             <div class="tag-box"><div id="missing-tags"></div></div>
         </div>
@@ -128,16 +128,16 @@
                 <thead>
                     <tr>
                         <th rowspan="2" style="width:110px;">花卉名稱</th>
-                        <th colspan="3" style="background:var(--white-node); color:white; width:150px;">白色</th>
-                        <th colspan="3" style="background:var(--yellow-node); color:white; width:150px;">黃色</th>
-                        <th colspan="3" style="background:var(--red-node); color:white; width:150px;">紅色</th>
-                        <th colspan="3" style="background:var(--blue-node); color:white; width:150px;">藍色</th>
+                        <th colspan="3" style="background:var(--white-node); color:white;">白色</th>
+                        <th colspan="3" style="background:var(--yellow-node); color:white;">黃色</th>
+                        <th colspan="3" style="background:var(--red-node); color:white;">紅色</th>
+                        <th colspan="3" style="background:var(--blue-node); color:white;">藍色</th>
                     </tr>
-                    <tr style="font-size: 0.75rem;">
-                        <th>有</th><th>精</th><th>瓣</th>
-                        <th>有</th><th>精</th><th>瓣</th>
-                        <th>有</th><th>精</th><th>瓣</th>
-                        <th>有</th><th>精</th><th>瓣</th>
+                    <tr style="font-size: 0.85rem; background: #fdfdfd;">
+                        <th>擁有</th><th>精華</th><th>花瓣</th>
+                        <th>擁有</th><th>精華</th><th>花瓣</th>
+                        <th>擁有</th><th>精華</th><th>花瓣</th>
+                        <th>擁有</th><th>精華</th><th>花瓣</th>
                     </tr>
                 </thead>
                 <tbody id="table-body"></tbody>
@@ -147,7 +147,7 @@
 </div>
 
 <script>
-// --- 資料清單 (維持不變) ---
+// --- 資料清單 (已含兼容處理邏輯所需名稱) ---
 const flowers = [
     {n:"三色堇", c:["白","黃","紅","藍"]}, {n:"玫瑰", c:["白","黃","紅","藍"]}, {n:"聖誕紅", c:["白","黃","紅","藍"]},
     {n:"山茶花", c:["白","黃","紅","藍"]}, {n:"梅花", c:["白","黃","紅"]}, {n:"櫻花", c:["白"]},
@@ -168,72 +168,13 @@ const flowers = [
 ];
 const colorKeys = ["白", "黃", "紅", "藍"];
 
-// --- 👑 智慧貼上功能 (放寬限制版) ---
-async function pasteFromClipboard() {
-    const textarea = document.getElementById('import-json');
-    const btn = document.getElementById('paste-btn');
-    
-    try {
-        // 嘗試使用現代 API
-        const text = await navigator.clipboard.readText();
-        if (text) {
-            textarea.value = text;
-            textarea.classList.add('textarea-highlight');
-            setTimeout(() => textarea.classList.remove('textarea-highlight'), 1000);
-            alert('已自動貼上代碼！');
-        } else {
-            throw new Error('Empty');
-        }
-    } catch (err) {
-        // 觸發手動引導模式
-        textarea.focus();
-        textarea.classList.add('textarea-highlight');
-        textarea.placeholder = "⚠️ 瀏覽器保護中，請直接「長按此處」貼上內容...";
-        alert('【貼上引導】\n由於瀏覽器安全機制限制直接讀取，請長按輸入框手動貼上。');
-    }
-}
-
-// --- 👑 導入功能 (放寬限制：自動清理 Markdown) ---
-function importData() {
-    let raw = document.getElementById('import-json').value.trim();
-    if (!raw) return;
-
-    // 自動清理：移除 Markdown 語法 (```json ... ```)
-    raw = raw.replace(/```json/gi, "").replace(/```/g, "").trim();
-
-    try {
-        // 如果貼入的內容包含 JSON 以外的雜字，嘗試抓取第一個 [ 到最後一個 ]
-        const startIndex = raw.indexOf('[');
-        const endIndex = raw.lastIndexOf(']');
-        if (startIndex !== -1 && endIndex !== -1) {
-            raw = raw.substring(startIndex, endIndex + 1);
-        }
-
-        const data = JSON.parse(raw);
-        data.forEach(item => {
-            let shortColor = item.c.charAt(0); let pureName = item.n.trim();
-            const colorPrefixes = ["紅色", "白色", "黃色", "藍色", "紅", "白", "黃", "藍"];
-            colorPrefixes.forEach(p => { if(pureName.startsWith(p)) pureName = pureName.replace(p, ""); });
-            if (pureName === "三色菫" || pureName === "三色堇菫") pureName = "三色堇";
-            if (pureName === "碗豆花") pureName = "豌豆花"; if (pureName === "水仙") pureName = "水仙花";
-            const id = `${pureName.trim()}-${shortColor}`;
-            let d = JSON.parse(localStorage.getItem(id)) || {owned: false, f: '', e: ''};
-            d.owned = true; if(item.f !== undefined) d.f = item.f; if(item.e !== undefined) d.e = item.e;
-            localStorage.setItem(id, JSON.stringify(d));
-        });
-        renderTable(); 
-        alert('導入成功！');
-        textarea.classList.remove('textarea-highlight');
-    } catch (e) { alert('導入失敗：JSON 格式不正確。'); }
-}
-
-// --- Excel & 圖片匯出 (維持先前修復邏輯) ---
+// --- Excel 匯出 (欄位同步更新) ---
 function exportToExcel() {
     try {
-        const data = [
-            ["花卉名稱", "白色", "", "", "黃色", "", "", "紅色", "", "", "藍色", "", ""],
-            ["", "擁有", "精華", "花瓣", "擁有", "精華", "花瓣", "擁有", "精華", "花瓣", "擁有", "精華", "花瓣"]
-        ];
+        const data = [];
+        data.push(["花卉名稱", "白色", "", "", "黃色", "", "", "紅色", "", "", "藍色", "", ""]);
+        data.push(["", "擁有", "精華", "花瓣", "擁有", "精華", "花瓣", "擁有", "精華", "花瓣", "擁有", "精華", "花瓣"]);
+
         flowers.forEach(f => {
             const row = [f.n];
             colorKeys.forEach(color => {
@@ -246,11 +187,12 @@ function exportToExcel() {
         });
         const ws = XLSX.utils.aoa_to_sheet(data);
         const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "FlowerStats");
-        XLSX.writeFile(wb, `FlowerStats_${new Date().toLocaleDateString()}.xlsx`);
+        XLSX.utils.book_append_sheet(wb, ws, "FlowerReport");
+        XLSX.writeFile(wb, `PikminFlower_Sync_${new Date().toLocaleDateString()}.xlsx`);
     } catch (err) { alert("Excel 匯出失敗。"); }
 }
 
+// --- 圖片截圖 (不裁切文字模式) ---
 function exportToImage() {
     const area = document.getElementById('export-area');
     const toolbar = area.querySelector('.toolbar');
@@ -268,7 +210,7 @@ function exportToImage() {
             });
             clonedDoc.querySelectorAll('input[type="checkbox"]').forEach(cb => {
                 const span = clonedDoc.createElement('span');
-                span.innerText = cb.checked ? "✓" : ""; span.style.color = "#2e7d32";
+                span.innerText = cb.checked ? "✓" : ""; span.style.color = "#2e7d32"; span.style.fontWeight = "bold";
                 cb.parentNode.replaceChild(span, cb);
             });
         }
@@ -312,7 +254,8 @@ function calculateStats() {
             if (f.c.includes(color)) {
                 totalAll++; colorStats[color].t++;
                 const d = JSON.parse(localStorage.getItem(`${f.n}-${color}`)) || {owned: false};
-                if (d.owned) { ownedAll++; colorStats[color].o++; } else { missingHtml += `<span class="tag">${f.n}(${color})</span>`; }
+                if (d.owned) { ownedAll++; colorStats[color].o++; } 
+                else { missingHtml += `<span class="tag">${f.n}(${color})</span>`; }
             }
         });
     });
@@ -324,9 +267,33 @@ function calculateStats() {
     document.getElementById('missing-tags').innerHTML = missingHtml ? `<div style="font-size:0.85rem; font-weight:bold; color:#d32f2f; margin-bottom:5px;">尚未擁有：</div>` + missingHtml : '🌟 全收集達成！';
 }
 
-function clearTextarea() { 
-    const t = document.getElementById('import-json');
-    t.value = ''; t.placeholder = "點擊下方一鍵貼上，或長按此處手動貼上...";
+function clearTextarea() { document.getElementById('import-json').value = ''; }
+async function pasteFromClipboard() {
+    try { const text = await navigator.clipboard.readText(); document.getElementById('import-json').value = text; alert('已成功貼上！'); } 
+    catch (err) { alert('請手動長按輸入框貼上。'); }
+}
+
+function importData() {
+    let raw = document.getElementById('import-json').value.trim();
+    if (!raw) return;
+    raw = raw.replace(/```json/gi, "").replace(/```/g, "").trim();
+    try {
+        const start = raw.indexOf('['); const end = raw.lastIndexOf(']');
+        if (start !== -1 && end !== -1) raw = raw.substring(start, end + 1);
+        const data = JSON.parse(raw);
+        data.forEach(item => {
+            let shortColor = item.c.charAt(0); let pureName = item.n.trim();
+            const prefixes = ["紅色", "白色", "黃色", "藍色", "紅", "白", "黃", "藍"];
+            prefixes.forEach(p => { if(pureName.startsWith(p)) pureName = pureName.replace(p, ""); });
+            if (pureName === "三色菫" || pureName === "三色堇菫") pureName = "三色堇";
+            if (pureName === "碗豆花") pureName = "豌豆花"; if (pureName === "水仙") pureName = "水仙花";
+            const id = `${pureName.trim()}-${shortColor}`;
+            let d = JSON.parse(localStorage.getItem(id)) || {owned: false, f: '', e: ''};
+            d.owned = true; if(item.f !== undefined) d.f = item.f; if(item.e !== undefined) d.e = item.e;
+            localStorage.setItem(id, JSON.stringify(d));
+        });
+        renderTable(); alert('導入成功！');
+    } catch (e) { alert('格式錯誤。'); }
 }
 
 function copyPrompt() {
@@ -344,8 +311,8 @@ function fallbackCopy(text, btn) {
         document.body.appendChild(textArea); textArea.focus(); textArea.select();
         const successful = document.execCommand('copy');
         document.body.removeChild(textArea);
-        if (successful) showSuccess(btn); else window.prompt("請手動複製：", text);
-    } catch (err) { window.prompt("請手動複製：", text); }
+        if (successful) showSuccess(btn); else window.prompt("請複製指令：", text);
+    } catch (err) { window.prompt("請複製指令：", text); }
 }
 
 function showSuccess(btn) {
@@ -353,7 +320,7 @@ function showSuccess(btn) {
     setTimeout(() => { btn.innerHTML = orig; btn.style.backgroundColor = ""; }, 2000);
 }
 
-function resetData() { if(confirm('確定清空所有數據嗎？')) { localStorage.clear(); renderTable(); } }
+function resetData() { if(confirm('確定清空數據嗎？')) { localStorage.clear(); renderTable(); } }
 
 renderTable();
 </script>
