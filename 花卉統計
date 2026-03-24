@@ -15,52 +15,67 @@
         }
 
         body { font-family: -apple-system, "Noto Sans TC", sans-serif; background-color: var(--bg); margin: 0; color: #333; line-height: 1.6; }
-        nav { background: #fff; padding: 10px 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
-        .logo { font-size: 1.2rem; font-weight: bold; color: var(--primary); display: flex; align-items: center; gap: 8px; }
-        .container { max-width: 1200px; margin: 20px auto; padding: 0 15px; }
         
-        .hero { background: linear-gradient(135deg, #2e7d32 0%, #66bb6a 100%); color: white; padding: 30px; border-radius: 15px; margin-bottom: 25px; }
+        /* 導航欄 */
+        nav { background: #fff; padding: 10px 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 2000; flex-wrap: wrap; gap: 10px; }
+        .nav-left { display: flex; align-items: center; gap: 15px; }
+        .logo { font-size: 1.2rem; font-weight: bold; color: var(--primary); white-space: nowrap; }
+        
+        .acc-manager { display: flex; align-items: center; gap: 8px; background: #f0f4f0; padding: 5px 12px; border-radius: 20px; border: 1px solid #ddd; }
+        .acc-select { border: none; background: transparent; font-weight: bold; color: var(--primary); cursor: pointer; font-size: 0.95rem; outline: none; }
+        
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 15px; }
+        .hero { background: linear-gradient(135deg, #2e7d32 0%, #66bb6a 100%); color: white; padding: 25px; border-radius: 15px; margin-bottom: 25px; }
+        
         .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px; }
         @media (max-width: 768px) { .main-grid { grid-template-columns: 1fr; } }
         
-        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border: 1px solid #eee; }
+        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border: 1px solid #eee; margin-bottom: 20px; }
         .card-title { font-weight: bold; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; font-size: 1.1rem; }
+
+        /* 👑 操作步驟樣式 */
+        .step-box { background: #e3f2fd; border-left: 4px solid var(--blue); padding: 12px; border-radius: 4px; margin-bottom: 15px; font-size: 0.9rem; }
+        .step-box ol { margin: 5px 0 0 20px; padding: 0; color: #1565c0; }
+        .step-box li { margin-bottom: 5px; font-weight: 500; }
 
         .notice-box { background: #fff5f5; border: 1px solid #ffdede; padding: 12px; border-radius: 8px; margin-bottom: 15px; font-size: 0.85rem; color: #c62828; }
         .notice-box ul { margin: 5px 0 0 20px; padding: 0; }
-        .instruction-box { background: #fff9f0; border-left: 4px solid var(--orange); padding: 12px; margin-bottom: 15px; border-radius: 4px; font-size: 0.85rem; }
-        
-        textarea { width: 100%; height: 110px; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-family: monospace; font-size: 13px; box-sizing: border-box; transition: all 0.3s; }
-        textarea:focus { border-color: var(--blue); outline: none; background: #fff; }
+        .notice-box li { margin-bottom: 4px; }
+
+        .instruction-box { background: #fff9f0; border-left: 4px solid var(--orange); padding: 10px; margin-bottom: 15px; font-size: 0.85rem; }
+        textarea { width: 100%; height: 100px; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-family: monospace; font-size: 13px; box-sizing: border-box; }
 
         .stat-main { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .progress-bar-bg { width: 100%; background: #eee; height: 12px; border-radius: 6px; overflow: hidden; margin: 10px 0; }
         .progress-bar-fill { height: 100%; background: #4caf50; width: 0%; transition: width 0.6s; }
         
         .color-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-        .color-item { padding: 10px; border-radius: 8px; background: #fafafa; border: 1px solid #f0f0f0; text-align: center; }
+        .color-item { padding: 8px; border-radius: 8px; background: #fafafa; border: 1px solid #f0f0f0; text-align: center; }
 
         .table-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 50px; }
-        .toolbar { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
-        .table-wrapper { overflow-x: auto; max-height: 600px; border: 1px solid #eee; border-radius: 8px; position: relative; background: white; }
+        .toolbar { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; align-items: center; }
+        .sort-select { padding: 10px; border-radius: 8px; border: 1px solid #ddd; font-size: 0.9rem; flex: 1; min-width: 180px; }
 
-        table { width: 100%; border-collapse: collapse; min-width: 1100px; background: white; }
-        th, td { border: 1px solid #eee; text-align: center; padding: 8px 4px; font-size: 0.9rem; }
-        th { background: #f9f9f9; position: sticky; top: 0; z-index: 10; }
-        .name-td { font-weight: bold; background: #fff; position: sticky; left: 0; z-index: 5; border-right: 2px solid #eee; width: 110px; }
+        .table-wrapper { overflow-x: auto; max-height: 650px; border: 1px solid #eee; border-radius: 8px; position: relative; }
+        table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 1100px; }
+        th, td { border: 1px solid #eee; text-align: center; padding: 10px 4px; font-size: 0.9rem; }
         
-        input[type="number"] { width: 85%; border: 1px solid transparent; background: #f5f5f5; text-align: center; padding: 5px; border-radius: 4px; font-size: 1rem; }
+        thead tr:nth-child(1) th { position: sticky; top: 0; z-index: 100; background: #f9f9f9; border-bottom: 2px solid #ddd; }
+        thead tr:nth-child(2) th { position: sticky; top: 46px; z-index: 99; background: #fdfdfd; border-bottom: 1px solid #ddd; }
+        .name-td { font-weight: bold; background: #fff !important; position: sticky; left: 0; z-index: 50; border-right: 2px solid #eee; width: 110px; }
+
+        input[type="number"] { width: 80%; border: 1px solid transparent; background: #f5f5f5; text-align: center; padding: 4px; border-radius: 4px; font-size: 1rem; }
         .owned-cell { background-color: var(--primary-light) !important; }
 
-        .btn { padding: 10px 16px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .btn { padding: 8px 14px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 5px; font-size: 0.85rem; }
         .btn-orange { background: var(--orange); color: white; width: 100%; }
-        .btn-blue { background: var(--blue); color: white; width: 100%; margin-top: 10px; }
+        .btn-blue { background: var(--blue); color: white; width: 100%; margin-top: 10px; padding: 12px; }
         .btn-green { background: var(--primary); color: white; }
         .btn-sky { background: #00bcd4; color: white; }
         .btn-purple { background: var(--purple); color: white; flex: 1; }
         .btn-red { background: var(--danger); color: white; flex: 1; }
-        .btn-reset { background: #f5f5f5; color: #666; font-size: 0.8rem; }
-
+        .btn-reset { background: #f5f5f5; color: #666; font-size: 0.75rem; border: 1px solid #ddd; }
+        
         .tag-box { margin-top: 15px; padding: 10px; background: #fff5f5; border-radius: 8px; }
         .tag { display: inline-block; background: white; border: 1px solid #ffcdd2; color: #c62828; padding: 2px 10px; border-radius: 15px; font-size: 0.75rem; margin: 2px; }
     </style>
@@ -68,34 +83,55 @@
 <body>
 
 <nav>
-    <div class="logo">🌸 Pikmin Flower Hub</div>
-    <button class="btn btn-reset" onclick="resetData()">清空所有數據</button>
+    <div class="nav-left">
+        <div class="logo">🌸 Flower Hub</div>
+        <div class="acc-manager">
+            <small>帳號：</small>
+            <select class="acc-select" id="active-account-select" onchange="switchAccount(this.value)"></select>
+            <button class="btn btn-reset" style="padding: 2px 8px;" onclick="addAccount()">➕</button>
+            <button class="btn btn-reset" style="padding: 2px 8px; color: var(--danger);" onclick="deleteAccount()">🗑️</button>
+        </div>
+    </div>
+    <button class="btn btn-reset" onclick="hardReset()">清空此帳號數據</button>
 </nav>
 
 <div class="container">
     <div class="hero">
-        <h1>您好，皮克敏中毒玩家！</h1>
-        <p>追蹤精華與花瓣數據。同步 AI 代碼後，您可以下載與網站排版一致的 Excel 檔案或完整截圖。</p>
+        <h2 style="margin:0;">哈囉！<span id="display-acc-name">探險者</span></h2>
+        <p style="margin:5px 0 0 0;">歡迎來到皮克敏花卉管理中心，請依照下方步驟同步您的數據。</p>
     </div>
 
     <div class="main-grid">
         <div class="card">
-            <div class="card-title">🤖 AI 智慧同步</div>
+            <div class="card-title">🤖 AI 數據同步</div>
+            
+            <div class="step-box">
+                <b>📘 使用操作步驟：</b>
+                <ol>
+                    <li>截圖遊戲內所有的精華數量畫面。</li>
+                    <li>上傳到 Gemini 辨識，並複製下方「AI 指令」傳送進行運算。</li>
+                    <li>待 Gemini 分析完成後，複製其輸出的 JSON 代碼。</li>
+                    <li>回到本網頁貼上代碼，並按下「導入更新」。</li>
+                </ol>
+            </div>
+
             <div class="notice-box">
                 <b>📸 辨識注意事項：</b>
                 <ul>
-                    <li>照片上限 10 張。建議依顏色分類截圖。</li>
-                    <li>截圖文字請完整顯示，請勿裁切或擋到。</li>
-                    <li>若精華 0 且截圖未顯示該花，系統將判定為無。</li>
+                    <li>1.照片上限 10 張，超過請分批辨識新增。</li>
+                    <li>2.截圖請完整顯示文字，不要裁剪或擋到。</li>
+                    <li>3.建議依顏色分類截圖，提高辨識準確度。</li>
+                    <li>4.若精華數為 0 且截圖未顯示該花，將判定為無數量。</li>
                 </ul>
             </div>
+
             <div class="instruction-box">
-                <span id="prompt-text">請幫我讀取這張圖，並輸出 JSON 代碼。規範：1. 格式為 `[{"n":"花名","c":"白/黃/紅/藍","f":精華數,"e":花瓣數}]`。 2. 花名(n) 必須移除前面的顏色字眼。 3. 顏色(c) 只能用單字：白、黃、紅、藍。 4. 請只輸出 JSON。</span>
+                <span id="prompt-text">請幫我讀取這張圖，並輸出 JSON 代碼。規範：1. 格式為 `[{"n":"花名","c":"白/黃/紅/藍","f":精華數,"e":花瓣數}]`。 2. 花名(n) 必須移除顏色字眼。 3. 請只輸出 JSON。</span>
             </div>
             <button class="btn btn-orange" id="copy-btn" onclick="copyPrompt()">📋 複製 AI 辨識指令</button>
-            <textarea id="import-json" placeholder="點擊下方貼入，或長按此處手動貼上 AI 代碼..."></textarea>
+            <textarea id="import-json" placeholder="在此貼入代碼..."></textarea>
             <div style="display:flex; gap:10px; margin-top:10px;">
-                <button class="btn btn-purple" id="paste-btn" onclick="pasteFromClipboard()">📥 一鍵貼上</button>
+                <button class="btn btn-purple" onclick="pasteFromClipboard()">📥 一鍵貼上</button>
                 <button class="btn btn-red" onclick="clearTextarea()">🗑️ 清除</button>
             </div>
             <button class="btn btn-blue" onclick="importData()">🚀 導入更新並計算進度</button>
@@ -108,10 +144,10 @@
                 <div class="progress-bar-bg" style="width: 150px;"><div id="progress-bar" class="progress-bar-fill"></div></div>
             </div>
             <div class="color-grid">
-                <div class="color-item c-white"><small>白色完成度</small><br><b id="cs-val-白">0%</b></div>
-                <div class="color-item c-yellow"><small>黃色完成度</small><br><b id="cs-val-黃">0%</b></div>
-                <div class="color-item c-red"><small>紅色完成度</small><br><b id="cs-val-紅">0%</b></div>
-                <div class="color-item c-blue"><small>藍色完成度</small><br><b id="cs-val-藍">0%</b></div>
+                <div class="color-item"><small>白色完成</small><br><b id="cs-val-白">0%</b></div>
+                <div class="color-item"><small>黃色完成</small><br><b id="cs-val-黃">0%</b></div>
+                <div class="color-item"><small>紅色完成</small><br><b id="cs-val-紅">0%</b></div>
+                <div class="color-item"><small>藍色完成</small><br><b id="cs-val-藍">0%</b></div>
             </div>
             <div class="tag-box"><div id="missing-tags"></div></div>
         </div>
@@ -120,20 +156,30 @@
     <div class="table-card" id="export-area">
         <div class="card-title">📝 詳細資源清單</div>
         <div class="toolbar">
-            <button class="btn btn-green" onclick="exportToExcel()">📊 下載同步格式 Excel</button>
-            <button class="btn btn-sky" onclick="exportToImage()">🖼️ 儲存為完整圖片</button>
+            <select class="sort-select" id="sort-order" onchange="renderTable()">
+                <option value="default">預設排序</option>
+                <option value="name">名稱排序</option>
+                <optgroup label="精華數量 (多→少)">
+                    <option value="f-白-desc">白：精華</option><option value="f-黃-desc">黃：精華</option><option value="f-紅-desc">紅：精華</option><option value="f-藍-desc">藍：精華</option>
+                </optgroup>
+                <optgroup label="精華數量 (少→多)">
+                    <option value="f-白-asc">白：精華</option><option value="f-黃-asc">黃：精華</option><option value="f-紅-asc">紅：精華</option><option value="f-藍-asc">藍：精華</option>
+                </optgroup>
+            </select>
+            <button class="btn btn-green" onclick="exportToExcel()">📊 Excel 匯出</button>
+            <button class="btn btn-sky" onclick="exportToImage()">🖼️ 儲存圖片</button>
         </div>
         <div class="table-wrapper" id="capture-wrapper">
             <table id="main-table">
                 <thead>
                     <tr>
-                        <th rowspan="2" style="width:110px;">花卉名稱</th>
+                        <th rowspan="2">花卉名稱</th>
                         <th colspan="3" style="background:var(--white-node); color:white;">白色</th>
                         <th colspan="3" style="background:var(--yellow-node); color:white;">黃色</th>
                         <th colspan="3" style="background:var(--red-node); color:white;">紅色</th>
                         <th colspan="3" style="background:var(--blue-node); color:white;">藍色</th>
                     </tr>
-                    <tr style="font-size: 0.85rem; background: #fdfdfd;">
+                    <tr style="font-size: 0.85rem;">
                         <th>擁有</th><th>精華</th><th>花瓣</th>
                         <th>擁有</th><th>精華</th><th>花瓣</th>
                         <th>擁有</th><th>精華</th><th>花瓣</th>
@@ -147,92 +193,92 @@
 </div>
 
 <script>
-// --- 資料清單 (已含兼容處理邏輯所需名稱) ---
-const flowers = [
+// --- 資料清單 ---
+const flowersList = [
     {n:"三色堇", c:["白","黃","紅","藍"]}, {n:"玫瑰", c:["白","黃","紅","藍"]}, {n:"聖誕紅", c:["白","黃","紅","藍"]},
     {n:"山茶花", c:["白","黃","紅","藍"]}, {n:"梅花", c:["白","黃","紅"]}, {n:"櫻花", c:["白"]},
-    {n:"鬱金香", c:["白","黃","紅","藍"]}, {n:"繡球花", c:["白","紅","藍"]}, {n:"百合", c:["白","黃","紅"]},
-    {n:"向日葵", c:["黃"]}, {n:"彼岸花", c:["白","黃","紅"]}, {n:"大波斯菊", c:["白","黃","紅"]},
-    {n:"兔耳花", c:["白","紅","藍"]}, {n:"水仙花", c:["白","黃"]}, {n:"銀蓮花", c:["白","黃","紅","藍"]},
-    {n:"粉蝶花", c:["藍"]}, {n:"康乃馨", c:["白","黃","紅","藍"]}, {n:"海芋", c:["白","黃","紅","藍"]},
-    {n:"雞蛋花", c:["白","黃","紅"]}, {n:"扶桑花", c:["白","黃","紅","藍"]}, {n:"石竹", c:["白","紅","藍"]},
-    {n:"龍膽", c:["白","紅","藍"]}, {n:"菊花", c:["白","黃","紅","藍"]}, {n:"聖誕玫瑰", c:["白","黃","紅","藍"]},
-    {n:"嘉德麗雅蘭", c:["白","黃","紅","藍"]}, {n:"風信子", c:["白","黃","紅","藍"]}, {n:"豌豆花", c:["白","黃","紅","藍"]},
-    {n:"鈴蘭", c:["白","紅"]}, {n:"牡丹", c:["白","黃","紅","藍"]}, {n:"睡蓮", c:["白","黃","紅","藍"]},
-    {n:"牽牛花", c:["白","黃","紅","藍"]}, {n:"九重葛", c:["白","黃","紅","藍"]}, {n:"大理花", c:["白","黃","紅","藍"]},
-    {n:"鐵線蓮", c:["白","黃","紅","藍"]}, {n:"雪花蓮", c:["白","黃","紅"]}, {n:"小蒼蘭", c:["白","黃","紅","藍"]},
-    {n:"油菜花", c:["白","黃","藍"]}, {n:"週年紀念玫瑰", c:["白","黃","紅","藍"]}, {n:"鳶尾花", c:["白","黃","紅","藍"]},
-    {n:"天堂鳥", c:["白","黃","紅"]}, {n:"雞冠花", c:["白","黃","紅","藍"]}, {n:"萬壽菊", c:["白","黃","紅"]},
-    {n:"鼠尾草", c:["白","黃","紅","藍"]}, {n:"櫻草花", c:["白","黃","紅","藍"]}, {n:"金魚草", c:["白","黃","紅","藍"]},
-    {n:"矮牽牛", c:["白","紅","黃","藍"]}, {n:"精華", c:["白","黃","紅","藍"]}
+    {n:"鸚鵡鬱金香", c:["白","黃","紅","藍"]}, {n:"鬱金香", c:["白","黃","紅","藍"]}, {n:"繡球花", c:["白","紅","藍"]},
+    {n:"百合", c:["白","黃","紅"]}, {n:"向日葵", c:["黃"]}, {n:"彼岸花", c:["白","黃","紅"]},
+    {n:"大波斯菊", c:["白","黃","紅"]}, {n:"兔耳花", c:["白","紅","藍"]}, {n:"水仙花", c:["白","黃"]},
+    {n:"銀蓮花", c:["白","黃","紅","藍"]}, {n:"粉蝶花", c:["藍"]}, {n:"康乃馨", c:["白","黃","紅","藍"]},
+    {n:"海芋", c:["白","黃","紅","藍"]}, {n:"雞蛋花", c:["白","黃","紅"]}, {n:"扶桑花", c:["白","黃","紅","藍"]},
+    {n:"石竹", c:["白","紅","藍"]}, {n:"龍膽", c:["白","紅","藍"]}, {n:"菊花", c:["白","黃","紅","藍"]},
+    {n:"聖誕玫瑰", c:["白","黃","紅","藍"]}, {n:"嘉德麗雅蘭", c:["白","黃","紅","藍"]}, {n:"風信子", c:["白","黃","紅","藍"]},
+    {n:"豌豆花", c:["白","黃","紅","藍"]}, {n:"鈴蘭", c:["白","紅"]}, {n:"牡丹", c:["白","黃","紅","藍"]},
+    {n:"睡蓮", c:["白","黃","紅","藍"]}, {n:"牽牛花", c:["白","黃","紅","藍"]}, {n:"九重葛", c:["白","黃","紅","藍"]},
+    {n:"大理花", c:["白","黃","紅","藍"]}, {n:"鐵線蓮", c:["白","黃","紅","藍"]}, {n:"雪花蓮", c:["白","黃","紅"]},
+    {n:"小蒼蘭", c:["白","黃","紅","藍"]}, {n:"油菜花", c:["白","黃","藍"]}, {n:"週年紀念玫瑰", c:["白","黃","紅","藍"]},
+    {n:"鳶尾花", c:["白","黃","紅","藍"]}, {n:"天堂鳥", c:["白","黃","紅"]}, {n:"雞冠花", c:["白","黃","紅","藍"]},
+    {n:"萬壽菊", c:["白","黃","紅"]}, {n:"鼠尾草", c:["白","黃","紅","藍"]}, {n:"櫻草花", c:["白","黃","紅","藍"]},
+    {n:"金魚草", c:["白","黃","紅","藍"]}, {n:"矮牽牛", c:["白","紅","黃","藍"]}, {n:"精華", c:["白","黃","紅","藍"]}
 ];
 const colorKeys = ["白", "黃", "紅", "藍"];
 
-// --- Excel 匯出 (欄位同步更新) ---
-function exportToExcel() {
-    try {
-        const data = [];
-        data.push(["花卉名稱", "白色", "", "", "黃色", "", "", "紅色", "", "", "藍色", "", ""]);
-        data.push(["", "擁有", "精華", "花瓣", "擁有", "精華", "花瓣", "擁有", "精華", "花瓣", "擁有", "精華", "花瓣"]);
+// --- 帳號管理邏輯 ---
+const defaultName = "皮克敏重度中毒者";
+let accounts = JSON.parse(localStorage.getItem('fh_accounts')) || [defaultName];
+let activeAcc = localStorage.getItem('fh_active_acc') || defaultName;
 
-        flowers.forEach(f => {
-            const row = [f.n];
-            colorKeys.forEach(color => {
-                if (f.c.includes(color)) {
-                    const d = JSON.parse(localStorage.getItem(`${f.n}-${color}`)) || {owned: false, f: 0, e: 0};
-                    row.push(d.owned ? "V" : "", d.f || 0, d.e || 0);
-                } else { row.push("-", "-", "-"); }
-            });
-            data.push(row);
-        });
-        const ws = XLSX.utils.aoa_to_sheet(data);
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "FlowerReport");
-        XLSX.writeFile(wb, `PikminFlower_Sync_${new Date().toLocaleDateString()}.xlsx`);
-    } catch (err) { alert("Excel 匯出失敗。"); }
-}
-
-// --- 圖片截圖 (不裁切文字模式) ---
-function exportToImage() {
-    const area = document.getElementById('export-area');
-    const toolbar = area.querySelector('.toolbar');
-    toolbar.style.display = 'none';
-    html2canvas(area, {
-        backgroundColor: "#ffffff", scale: 2, useCORS: true,
-        onclone: (clonedDoc) => {
-            const clonedWrapper = clonedDoc.getElementById('capture-wrapper');
-            clonedWrapper.style.maxHeight = 'none'; clonedWrapper.style.overflow = 'visible';
-            clonedDoc.querySelectorAll('.name-td, th').forEach(el => el.style.position = 'static');
-            clonedDoc.querySelectorAll('input[type="number"]').forEach(input => {
-                const span = clonedDoc.createElement('span');
-                span.innerText = input.value || "0"; span.style.fontWeight = "bold";
-                input.parentNode.replaceChild(span, input);
-            });
-            clonedDoc.querySelectorAll('input[type="checkbox"]').forEach(cb => {
-                const span = clonedDoc.createElement('span');
-                span.innerText = cb.checked ? "✓" : ""; span.style.color = "#2e7d32"; span.style.fontWeight = "bold";
-                cb.parentNode.replaceChild(span, cb);
-            });
+// 遷移邏輯
+if (accounts.includes("預設帳號")) {
+    const oldIdx = accounts.indexOf("預設帳號"); accounts[oldIdx] = defaultName;
+    if (activeAcc === "預設帳號") activeAcc = defaultName;
+    localStorage.setItem('fh_accounts', JSON.stringify(accounts)); localStorage.setItem('fh_active_acc', activeAcc);
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith("預設帳號_")) {
+            localStorage.setItem(key.replace("預設帳號_", defaultName + "_"), localStorage.getItem(key));
+            localStorage.removeItem(key); i--;
         }
-    }).then(canvas => {
-        const link = document.createElement('a');
-        link.download = `Flower_Report_${new Date().getTime()}.png`;
-        link.href = canvas.toDataURL("image/png");
-        link.click();
-        toolbar.style.display = 'flex';
-    });
+    }
 }
 
-// --- 基礎邏輯 ---
+function updateAccUI() {
+    const select = document.getElementById('active-account-select');
+    select.innerHTML = accounts.map(a => `<option value="${a}" ${a===activeAcc?'selected':''}>${a}</option>`).join('');
+    document.getElementById('display-acc-name').innerText = activeAcc;
+}
+function switchAccount(name) { activeAcc = name; localStorage.setItem('fh_active_acc', name); updateAccUI(); renderTable(); }
+function addAccount() {
+    const name = prompt("輸入帳號名稱：");
+    if (name && !accounts.includes(name)) { accounts.push(name); localStorage.setItem('fh_accounts', JSON.stringify(accounts)); switchAccount(name); }
+}
+function deleteAccount() {
+    if (accounts.length <= 1) return alert("須保留至少一帳號！");
+    if (confirm(`確定刪除 [${activeAcc}] 嗎？`)) {
+        accounts = accounts.filter(a => a !== activeAcc); localStorage.setItem('fh_accounts', JSON.stringify(accounts)); switchAccount(accounts[0]);
+    }
+}
+
+// --- 基礎存取 ---
+function getL(id) { return JSON.parse(localStorage.getItem(`${activeAcc}_${id}`)) || {owned: false, f: '', e: ''}; }
+function setL(id, d) { localStorage.setItem(`${activeAcc}_${id}`, JSON.stringify(d)); }
+
+// --- 渲染 ---
 function renderTable() {
     const tbody = document.getElementById('table-body');
-    tbody.innerHTML = flowers.map(f => {
+    const sortVal = document.getElementById('sort-order').value;
+    let sorted = [...flowersList];
+
+    if (sortVal === "name") sorted.sort((a, b) => a.n.localeCompare(b.n, 'zh-TW'));
+    else if (sortVal.includes("-")) {
+        const [type, color, dir] = sortVal.split("-");
+        sorted.sort((a, b) => {
+            const vA = Number(getL(`${a.n}-${color}`)[type] || 0);
+            const vB = Number(getL(`${b.n}-${color}`)[type] || 0);
+            return dir === "asc" ? vA - vB : vB - vA;
+        });
+    }
+
+    tbody.innerHTML = sorted.map(f => {
         const cells = colorKeys.map(color => {
             if (!f.c.includes(color)) return `<td colspan="3" style="background:#f9f9f9; opacity:0.3"></td>`;
             const id = `${f.n}-${color}`;
-            const d = JSON.parse(localStorage.getItem(id)) || {owned: false, f: '', e: ''};
+            const d = getL(id);
             const cls = d.owned ? 'owned-cell' : '';
-            return `<td class="${cls}" id="cell-check-${id}"><input type="checkbox" onchange="updateData('${id}','owned',this.checked)" ${d.owned ? 'checked' : ''}></td><td class="${cls}" id="cell-f-${id}"><input type="number" value="${d.f}" oninput="updateData('${id}','f',this.value)" placeholder="0"></td><td class="${cls}" id="cell-e-${id}"><input type="number" value="${d.e}" oninput="updateData('${id}','e',this.value)" placeholder="0"></td>`;
+            return `<td class="${cls}" id="cell-check-${id}"><input type="checkbox" onchange="updateData('${id}','owned',this.checked)" ${d.owned?'checked':''}></td>
+                    <td class="${cls}" id="cell-f-${id}"><input type="number" value="${d.f}" oninput="updateData('${id}','f',this.value)" placeholder="0"></td>
+                    <td class="${cls}" id="cell-e-${id}"><input type="number" value="${d.e}" oninput="updateData('${id}','e',this.value)" placeholder="0"></td>`;
         }).join('');
         return `<tr><td class="name-td">${f.n}</td>${cells}</tr>`;
     }).join('');
@@ -240,89 +286,87 @@ function renderTable() {
 }
 
 function updateData(id, field, value) {
-    let d = JSON.parse(localStorage.getItem(id)) || {owned: false, f: '', e: ''};
-    d[field] = value; localStorage.setItem(id, JSON.stringify(d));
-    if (field === 'owned') { ['cell-check-', 'cell-f-', 'cell-e-'].forEach(pre => { const el = document.getElementById(pre + id); if (el) el.classList.toggle('owned-cell', value); }); }
+    let d = getL(id); d[field] = value; setL(id, d);
+    if (field === 'owned') { ['cell-check-', 'cell-f-', 'cell-e-'].forEach(p => { const e = document.getElementById(p + id); if (e) e.classList.toggle('owned-cell', value); }); }
     calculateStats();
 }
 
 function calculateStats() {
     let totalAll = 0, ownedAll = 0, missingHtml = '';
     const colorStats = { "白": {t:0, o:0}, "黃": {t:0, o:0}, "紅": {t:0, o:0}, "藍": {t:0, o:0} };
-    flowers.forEach(f => {
-        colorKeys.forEach(color => {
-            if (f.c.includes(color)) {
-                totalAll++; colorStats[color].t++;
-                const d = JSON.parse(localStorage.getItem(`${f.n}-${color}`)) || {owned: false};
-                if (d.owned) { ownedAll++; colorStats[color].o++; } 
-                else { missingHtml += `<span class="tag">${f.n}(${color})</span>`; }
+    flowersList.forEach(f => {
+        colorKeys.forEach(c => {
+            if (f.c.includes(c)) {
+                totalAll++; colorStats[c].t++;
+                if (getL(`${f.n}-${c}`).owned) { ownedAll++; colorStats[c].o++; }
+                else { missingHtml += `<span class="tag">${f.n}(${c})</span>`; }
             }
         });
     });
-    const pctAll = totalAll > 0 ? Math.round((ownedAll / totalAll) * 100) : 0;
+    const pct = totalAll ? Math.round((ownedAll/totalAll)*100) : 0;
+    document.getElementById('stat-percent').innerText = pct + '%';
     document.getElementById('stat-count').innerText = `${ownedAll} / ${totalAll}`;
-    document.getElementById('stat-percent').innerText = pctAll + '%';
-    document.getElementById('progress-bar').style.width = pctAll + '%';
-    colorKeys.forEach(c => { const pct = colorStats[c].t > 0 ? Math.round((colorStats[c].o / colorStats[c].t) * 100) : 0; document.getElementById(`cs-val-${c}`).innerText = `${pct}%`; });
-    document.getElementById('missing-tags').innerHTML = missingHtml ? `<div style="font-size:0.85rem; font-weight:bold; color:#d32f2f; margin-bottom:5px;">尚未擁有：</div>` + missingHtml : '🌟 全收集達成！';
+    document.getElementById('progress-bar').style.width = (ownedAll/totalAll*100)+'%';
+    colorKeys.forEach(c => document.getElementById(`cs-val-${c}`).innerText = colorStats[c].t ? Math.round((colorStats[c].o/colorStats[c].t)*100)+'%' : '0%');
+    document.getElementById('missing-tags').innerHTML = missingHtml || '🌟 全收集達成！';
 }
 
-function clearTextarea() { document.getElementById('import-json').value = ''; }
-async function pasteFromClipboard() {
-    try { const text = await navigator.clipboard.readText(); document.getElementById('import-json').value = text; alert('已成功貼上！'); } 
-    catch (err) { alert('請手動長按輸入框貼上。'); }
+function exportToExcel() {
+    const data = [["帳號：", activeAcc], ["花卉名稱", "白色-擁有", "白色-精華", "白色-花瓣", "黃色-擁有", "黃色-精華", "黃色-花瓣", "紅色-擁有", "紅色-精華", "紅色-花瓣", "藍色-擁有", "藍色-精華", "藍色-花瓣"]];
+    flowersList.forEach(f => {
+        const row = [f.n];
+        colorKeys.forEach(c => {
+            const d = f.c.includes(c) ? getL(`${f.n}-${c}`) : null;
+            row.push(d ? (d.owned?'V':'') : '-', d ? (d.f||0) : '-', d ? (d.e||0) : '-');
+        });
+        data.push(row);
+    });
+    const ws = XLSX.utils.aoa_to_sheet(data);
+    const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "FlowerReport");
+    XLSX.writeFile(wb, `${activeAcc}_花卉報表.xlsx`);
 }
+
+function exportToImage() {
+    const area = document.getElementById('export-area');
+    const toolbar = area.querySelector('.toolbar'); toolbar.style.display = 'none';
+    html2canvas(area, { backgroundColor: "#ffffff", scale: 2, onclone: (cloned) => {
+        cloned.getElementById('capture-wrapper').style.maxHeight = 'none';
+        cloned.querySelectorAll('.name-td, th').forEach(el => el.style.position = 'static');
+        cloned.querySelectorAll('input[type="number"]').forEach(i => { const s = cloned.createElement('span'); s.innerText = i.value||0; s.style.fontWeight="bold"; i.parentNode.replaceChild(s, i); });
+        cloned.querySelectorAll('input[type="checkbox"]').forEach(c => { const s = cloned.createElement('span'); s.innerText = c.checked?'✓':''; s.style.color="#2e7d32"; c.parentNode.replaceChild(s, c); });
+    }}).then(canvas => {
+        const link = document.createElement('a'); link.download = `${activeAcc}_截圖.png`;
+        link.href = canvas.toDataURL(); link.click(); toolbar.style.display = 'flex';
+    });
+}
+
+function copyPrompt() { navigator.clipboard.writeText(document.getElementById('prompt-text').innerText).then(() => alert("指令已複製！")); }
+function clearTextarea() { document.getElementById('import-json').value = ''; }
+async function pasteFromClipboard() { try { const t = await navigator.clipboard.readText(); document.getElementById('import-json').value = t; alert("已貼上！"); } catch(e) { alert("請手動貼上。"); } }
 
 function importData() {
     let raw = document.getElementById('import-json').value.trim();
-    if (!raw) return;
     raw = raw.replace(/```json/gi, "").replace(/```/g, "").trim();
     try {
         const start = raw.indexOf('['); const end = raw.lastIndexOf(']');
-        if (start !== -1 && end !== -1) raw = raw.substring(start, end + 1);
-        const data = JSON.parse(raw);
+        const data = JSON.parse(raw.substring(start, end + 1));
         data.forEach(item => {
-            let shortColor = item.c.charAt(0); let pureName = item.n.trim();
+            let pureName = item.n.trim();
             const prefixes = ["紅色", "白色", "黃色", "藍色", "紅", "白", "黃", "藍"];
             prefixes.forEach(p => { if(pureName.startsWith(p)) pureName = pureName.replace(p, ""); });
             if (pureName === "三色菫" || pureName === "三色堇菫") pureName = "三色堇";
             if (pureName === "碗豆花") pureName = "豌豆花"; if (pureName === "水仙") pureName = "水仙花";
-            const id = `${pureName.trim()}-${shortColor}`;
-            let d = JSON.parse(localStorage.getItem(id)) || {owned: false, f: '', e: ''};
-            d.owned = true; if(item.f !== undefined) d.f = item.f; if(item.e !== undefined) d.e = item.e;
-            localStorage.setItem(id, JSON.stringify(d));
+            const id = `${pureName}-${item.c.charAt(0)}`;
+            let d = getL(id); d.owned = true; if(item.f!==undefined) d.f = item.f; if(item.e!==undefined) d.e = item.e;
+            setL(id, d);
         });
-        renderTable(); alert('導入成功！');
-    } catch (e) { alert('格式錯誤。'); }
+        renderTable(); alert("導入成功！");
+    } catch (e) { alert("格式錯誤。"); }
 }
 
-function copyPrompt() {
-    const text = document.getElementById('prompt-text').innerText;
-    const btn = document.getElementById('copy-btn');
-    if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(text).then(() => showSuccess(btn)).catch(() => fallbackCopy(text, btn));
-    } else { fallbackCopy(text, btn); }
-}
+function hardReset() { if(confirm("確定清空此帳號數據？")) { flowersList.forEach(f => colorKeys.forEach(c => localStorage.removeItem(`${activeAcc}_${f.n}-${c}`))); renderTable(); } }
 
-function fallbackCopy(text, btn) {
-    try {
-        const textArea = document.createElement("textarea");
-        textArea.value = text; textArea.style.position = "fixed"; textArea.style.left = "-9999px";
-        document.body.appendChild(textArea); textArea.focus(); textArea.select();
-        const successful = document.execCommand('copy');
-        document.body.removeChild(textArea);
-        if (successful) showSuccess(btn); else window.prompt("請複製指令：", text);
-    } catch (err) { window.prompt("請複製指令：", text); }
-}
-
-function showSuccess(btn) {
-    const orig = btn.innerHTML; btn.innerHTML = "✅ 已成功複製！"; btn.style.backgroundColor = "#2e7d32";
-    setTimeout(() => { btn.innerHTML = orig; btn.style.backgroundColor = ""; }, 2000);
-}
-
-function resetData() { if(confirm('確定清空數據嗎？')) { localStorage.clear(); renderTable(); } }
-
-renderTable();
+updateAccUI(); renderTable();
 </script>
 </body>
 </html>
