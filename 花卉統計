@@ -93,7 +93,7 @@
 <div class="container">
     <div class="hero">
         <h2 style="margin:0;">哈囉！<span id="display-acc-name">探險者</span></h2>
-        <p style="margin:5px 0 0 0;">歡迎來到皮克敏花卉管理中心，請依照下方步驟同步您的數據。</p>
+        <p style="margin:5px 0 0 0;">歡迎來到皮克敏花卉管理中心。表格欄位已調整：現為「擁有、花瓣、精華」。</p>
     </div>
 
     <div class="main-grid">
@@ -154,22 +154,11 @@
                 <optgroup label="全色總量排序 (少→多)">
                     <option value="petal-all-sum-asc">📊 全色花瓣加總 (少→多)</option>
                 </optgroup>
-                <optgroup label="單項精華排序 (少→多)"> <option value="f-白-asc">白：精華 (少→多)</option>
-                    <option value="f-黃-asc">黃：精華 (少→多)</option>
-                    <option value="f-紅-asc">紅：精華 (少→多)</option>
-                    <option value="f-藍-asc">藍：精華 (少→多)</option>
+                <optgroup label="單項精華排序 (少→多)">
+                    <option value="f-白-asc">白：精華 (少→多)</option><option value="f-黃-asc">黃：精華 (少→多)</option><option value="f-紅-asc">紅：精華 (少→多)</option><option value="f-藍-asc">藍：精華 (少→多)</option>
                 </optgroup>
                 <optgroup label="單項花瓣排序 (少→多)">
-                    <option value="e-白-asc">白：花瓣 (少→多)</option>
-                    <option value="e-黃-asc">黃：花瓣 (少→多)</option>
-                    <option value="e-紅-asc">紅：花瓣 (少→多)</option>
-                    <option value="e-藍-asc">藍：花瓣 (少→多)</option>
-                </optgroup>
-                <optgroup label="單色總數 (精華+花瓣 少→多)">
-                    <option value="total-白-asc">白：總量 (少→多)</option>
-                    <option value="total-黃-asc">黃：總量 (少→多)</option>
-                    <option value="total-紅-asc">紅：總量 (少→多)</option>
-                    <option value="total-藍-asc">藍：總量 (少→多)</option>
+                    <option value="e-白-asc">白：花瓣 (少→多)</option><option value="e-黃-asc">黃：花瓣 (少→多)</option><option value="e-紅-asc">紅：花瓣 (少→多)</option><option value="e-藍-asc">藍：花瓣 (少→多)</option>
                 </optgroup>
             </select>
             <button class="btn btn-green" onclick="exportToExcel()">📊 Excel 匯出</button>
@@ -186,10 +175,10 @@
                         <th colspan="3" style="background:var(--blue-node); color:white;">藍色</th>
                     </tr>
                     <tr style="font-size: 0.85rem;">
-                        <th>擁有</th><th>精華</th><th>花瓣</th>
-                        <th>擁有</th><th>精華</th><th>花瓣</th>
-                        <th>擁有</th><th>精華</th><th>花瓣</th>
-                        <th>擁有</th><th>精華</th><th>花瓣</th>
+                        <th>擁有</th><th>花瓣</th><th>精華</th>
+                        <th>擁有</th><th>花瓣</th><th>精華</th>
+                        <th>擁有</th><th>花瓣</th><th>精華</th>
+                        <th>擁有</th><th>花瓣</th><th>精華</th>
                     </tr>
                 </thead>
                 <tbody id="table-body"></tbody>
@@ -199,6 +188,7 @@
 </div>
 
 <script>
+// --- 資料清單 ---
 const flowersList = [
     {n:"三色堇", c:["白","黃","紅","藍"]}, {n:"玫瑰", c:["白","黃","紅","藍"]}, {n:"聖誕紅", c:["白","黃","紅","藍"]},
     {n:"山茶花", c:["白","黃","紅","藍"]}, {n:"梅花", c:["白","黃","紅"]}, {n:"櫻花", c:["白"]},
@@ -257,7 +247,7 @@ function deleteAccount() {
 function getL(id) { return JSON.parse(localStorage.getItem(`${activeAcc}_${id}`)) || {owned: false, f: '', e: ''}; }
 function setL(id, d) { localStorage.setItem(`${activeAcc}_${id}`, JSON.stringify(d)); }
 
-// --- 渲染與排序 ---
+// --- 渲染 ---
 function renderTable() {
     const tbody = document.getElementById('table-body');
     const sortVal = document.getElementById('sort-order').value;
@@ -269,15 +259,6 @@ function renderTable() {
             let sumA = colorKeys.reduce((acc, c) => acc + Number(getL(`${a.n}-${c}`).e || 0), 0);
             let sumB = colorKeys.reduce((acc, c) => acc + Number(getL(`${b.n}-${c}`).e || 0), 0);
             return sumA - sumB;
-        });
-    } else if (sortVal.startsWith("total-")) {
-        const [_, color, dir] = sortVal.split("-");
-        sorted.sort((a, b) => {
-            const dataA = getL(`${a.n}-${color}`);
-            const dataB = getL(`${b.n}-${color}`);
-            const tA = Number(dataA.f || 0) + Number(dataA.e || 0);
-            const tB = Number(dataB.f || 0) + Number(dataB.e || 0);
-            return dir === "asc" ? tA - tB : tB - tA;
         });
     } else if (sortVal.includes("-")) {
         const [type, color, dir] = sortVal.split("-");
@@ -293,9 +274,11 @@ function renderTable() {
             if (!f.c.includes(color)) return `<td colspan="3" style="background:#f9f9f9; opacity:0.3"></td>`;
             const id = `${f.n}-${color}`;
             const d = getL(id);
-            return `<td class="${d.owned?'owned-cell':''}" id="cell-check-${id}"><input type="checkbox" onchange="updateData('${id}','owned',this.checked)" ${d.owned?'checked':''}></td>
-                    <td class="${d.owned?'owned-cell':''}" id="cell-f-${id}"><input type="number" value="${d.f}" oninput="updateData('${id}','f',this.value)" placeholder="0"></td>
-                    <td class="${d.owned?'owned-cell':''}" id="cell-e-${id}"><input type="number" value="${d.e}" oninput="updateData('${id}','e',this.value)" placeholder="0"></td>`;
+            const cls = d.owned ? 'owned-cell' : '';
+            // 👑 數據欄位對調：e 在前，f 在後
+            return `<td class="${cls}" id="cell-check-${id}"><input type="checkbox" onchange="updateData('${id}','owned',this.checked)" ${d.owned?'checked':''}></td>
+                    <td class="${cls}" id="cell-e-${id}"><input type="number" value="${d.e}" oninput="updateData('${id}','e',this.value)" placeholder="0"></td>
+                    <td class="${cls}" id="cell-f-${id}"><input type="number" value="${d.f}" oninput="updateData('${id}','f',this.value)" placeholder="0"></td>`;
         }).join('');
         return `<tr><td class="name-td">${f.n}</td>${cells}</tr>`;
     }).join('');
@@ -328,18 +311,19 @@ function calculateStats() {
 }
 
 function exportToExcel() {
-    const data = [["帳號：", activeAcc], ["花卉名稱", "白色-擁有", "白色-精華", "白色-花瓣", "黃色-擁有", "黃色-精華", "黃色-花瓣", "紅色-擁有", "紅色-精華", "紅色-花瓣", "藍色-擁有", "藍色-精華", "藍色-花瓣"]];
+    // 👑 Excel 欄位同步對調：花瓣在前，精華在後
+    const data = [["帳號：", activeAcc], ["花卉名稱", "白色-擁有", "白色-花瓣", "白色-精華", "黃色-擁有", "黃色-花瓣", "黃色-精華", "紅色-擁有", "紅色-花瓣", "紅色-精華", "藍色-擁有", "藍色-花瓣", "藍色-精華"]];
     flowersList.forEach(f => {
         const row = [f.n];
         colorKeys.forEach(c => {
             const d = f.c.includes(c) ? getL(`${f.n}-${c}`) : null;
-            row.push(d ? (d.owned?'V':'') : '-', d ? (d.f||0) : '-', d ? (d.e||0) : '-');
+            row.push(d ? (d.owned?'V':'') : '-', d ? (d.e||0) : '-', d ? (d.f||0) : '-');
         });
         data.push(row);
     });
     const ws = XLSX.utils.aoa_to_sheet(data);
     const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "FlowerReport");
-    XLSX.writeFile(wb, `${activeAcc}_花卉報表.xlsx`);
+    XLSX.writeFile(wb, `${activeAcc}_資源報表.xlsx`);
 }
 
 function exportToImage() {
