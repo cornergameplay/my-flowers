@@ -51,7 +51,7 @@
         .toolbar { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; align-items: center; }
         .sort-select { padding: 10px; border-radius: 8px; border: 1px solid #ddd; font-size: 0.9rem; flex: 1; min-width: 180px; }
 
-        .table-wrapper { overflow-x: auto; max-height: 650px; border: 1px solid #eee; border-radius: 8px; position: relative; }
+        .table-wrapper { overflow-x: auto; max-height: 650px; border: 1px solid #eee; border-radius: 8px; position: relative; background: white; }
         table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 1100px; }
         th, td { border: 1px solid #eee; text-align: center; padding: 10px 4px; font-size: 0.9rem; }
         
@@ -151,17 +151,25 @@
             <select class="sort-select" id="sort-order" onchange="renderTable()">
                 <option value="default">預設排序</option>
                 <option value="name">名稱排序</option>
-                <optgroup label="總量排序 (精華+花瓣 少→多)">
-                    <option value="total-白-asc">白：總數 (少→多)</option>
-                    <option value="total-黃-asc">黃：總數 (少→多)</option>
-                    <option value="total-紅-asc">紅：總數 (少→多)</option>
-                    <option value="total-藍-asc">藍：總數 (少→多)</option>
+                <optgroup label="全色總量排序 (少→多)">
+                    <option value="petal-all-sum-asc">📊 全色花瓣加總 (少→多)</option>
                 </optgroup>
-                <optgroup label="精華數量排序 (多→少)">
-                    <option value="f-白-desc">白：精華 (多→少)</option><option value="f-黃-desc">黃：精華 (多→少)</option><option value="f-紅-desc">紅：精華 (多→少)</option><option value="f-藍-desc">藍：精華 (多→少)</option>
+                <optgroup label="單項精華排序 (少→多)"> <option value="f-白-asc">白：精華 (少→多)</option>
+                    <option value="f-黃-asc">黃：精華 (少→多)</option>
+                    <option value="f-紅-asc">紅：精華 (少→多)</option>
+                    <option value="f-藍-asc">藍：精華 (少→多)</option>
                 </optgroup>
-                <optgroup label="精華數量排序 (少→多)">
-                    <option value="f-白-asc">白：精華 (少→多)</option><option value="f-黃-asc">黃：精華 (少→多)</option><option value="f-紅-asc">紅：精華 (少→多)</option><option value="f-藍-asc">藍：精華 (少→多)</option>
+                <optgroup label="單項花瓣排序 (少→多)">
+                    <option value="e-白-asc">白：花瓣 (少→多)</option>
+                    <option value="e-黃-asc">黃：花瓣 (少→多)</option>
+                    <option value="e-紅-asc">紅：花瓣 (少→多)</option>
+                    <option value="e-藍-asc">藍：花瓣 (少→多)</option>
+                </optgroup>
+                <optgroup label="單色總數 (精華+花瓣 少→多)">
+                    <option value="total-白-asc">白：總量 (少→多)</option>
+                    <option value="total-黃-asc">黃：總量 (少→多)</option>
+                    <option value="total-紅-asc">紅：總量 (少→多)</option>
+                    <option value="total-藍-asc">藍：總量 (少→多)</option>
                 </optgroup>
             </select>
             <button class="btn btn-green" onclick="exportToExcel()">📊 Excel 匯出</button>
@@ -256,8 +264,13 @@ function renderTable() {
     let sorted = [...flowersList];
 
     if (sortVal === "name") sorted.sort((a, b) => a.n.localeCompare(b.n, 'zh-TW'));
-    else if (sortVal.startsWith("total-")) {
-        // 👑 總數排序邏輯 (精華 + 花瓣)
+    else if (sortVal === "petal-all-sum-asc") {
+        sorted.sort((a, b) => {
+            let sumA = colorKeys.reduce((acc, c) => acc + Number(getL(`${a.n}-${c}`).e || 0), 0);
+            let sumB = colorKeys.reduce((acc, c) => acc + Number(getL(`${b.n}-${c}`).e || 0), 0);
+            return sumA - sumB;
+        });
+    } else if (sortVal.startsWith("total-")) {
         const [_, color, dir] = sortVal.split("-");
         sorted.sort((a, b) => {
             const dataA = getL(`${a.n}-${color}`);
@@ -309,12 +322,11 @@ function calculateStats() {
     });
     document.getElementById('stat-percent').innerText = totalAll ? Math.round((ownedAll/totalAll)*100)+'%' : '0%';
     document.getElementById('stat-count').innerText = `${ownedAll} / ${totalAll}`;
-    document.getElementById('progress-bar').style.width = (ownedAll/totalAll*100)+'%';
+    document.getElementById('progress-bar').style.width = (totalAll ? (ownedAll/totalAll*100) : 0)+'%';
     colorKeys.forEach(c => document.getElementById(`cs-val-${c}`).innerText = colorStats[c].t ? Math.round((colorStats[c].o/colorStats[c].t)*100)+'%' : '0%');
     document.getElementById('missing-tags').innerHTML = missingHtml || '🌟 全收集達成！';
 }
 
-// --- 匯出功能 ---
 function exportToExcel() {
     const data = [["帳號：", activeAcc], ["花卉名稱", "白色-擁有", "白色-精華", "白色-花瓣", "黃色-擁有", "黃色-精華", "黃色-花瓣", "紅色-擁有", "紅色-精華", "紅色-花瓣", "藍色-擁有", "藍色-精華", "藍色-花瓣"]];
     flowersList.forEach(f => {
@@ -346,7 +358,7 @@ function exportToImage() {
 
 function copyPrompt() { navigator.clipboard.writeText(document.getElementById('prompt-text').innerText).then(() => alert("指令已複製！")); }
 function clearTextarea() { document.getElementById('import-json').value = ''; }
-async function pasteFromClipboard() { try { const t = await navigator.clipboard.readText(); document.getElementById('import-json').value = t; alert("已貼上！"); } catch(e) { alert("請手動貼上代碼。"); } }
+async function pasteFromClipboard() { try { const t = await navigator.clipboard.readText(); document.getElementById('import-json').value = t; alert("已貼上！"); } catch(e) { alert("請手動貼上。"); } }
 
 function importData() {
     let raw = document.getElementById('import-json').value.trim();
