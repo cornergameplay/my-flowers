@@ -23,6 +23,7 @@
         
         .container { max-width: 1200px; margin: 20px auto; padding: 0 15px; }
         .hero { background: linear-gradient(135deg, #2e7d32 0%, #66bb6a 100%); color: white; padding: 25px; border-radius: 15px; margin-bottom: 25px; }
+        
         .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px; }
         @media (max-width: 768px) { .main-grid { grid-template-columns: 1fr; } }
         
@@ -93,7 +94,7 @@
 <div class="container">
     <div class="hero">
         <h2 style="margin:0;">哈囉！<span id="display-acc-name">探險者</span></h2>
-        <p style="margin:5px 0 0 0;">歡迎來到皮克敏花卉管理中心。表格欄位已調整：現為「擁有、花瓣、精華」。</p>
+        <p style="margin:5px 0 0 0;">歡迎來到皮克敏花卉管理中心，請依照下方步驟同步您的數據。</p>
     </div>
 
     <div class="main-grid">
@@ -118,7 +119,7 @@
                 </ul>
             </div>
             <div class="instruction-box">
-                <span id="prompt-text">請幫我讀取這張圖，並輸出 JSON 代碼。規範：1. 格式為 `[{"n":"花名","c":"白/黃/紅/藍","f":精華數,"e":花瓣數}]`。 2. 花名(n) 必須移除顏色字眼。 3. 請只輸出 JSON。</span>
+                <span id="prompt-text">請幫我讀取這張圖，並輸出 JSON 代碼。規範：1. 格式為 `[{"n":"花名","c":"白/黃/紅/藍","f":花瓣數,"e":精華數}]`。 2. 花名(n) 必須移除顏色字眼。 3. 請只輸出 JSON。</span>
             </div>
             <button class="btn btn-orange" id="copy-btn" onclick="copyPrompt()">📋 複製 AI 辨識指令</button>
             <textarea id="import-json" placeholder="在此貼入代碼..."></textarea>
@@ -175,10 +176,7 @@
                         <th colspan="3" style="background:var(--blue-node); color:white;">藍色</th>
                     </tr>
                     <tr style="font-size: 0.85rem;">
-                        <th>擁有</th><th>花瓣</th><th>精華</th>
-                        <th>擁有</th><th>花瓣</th><th>精華</th>
-                        <th>擁有</th><th>花瓣</th><th>精華</th>
-                        <th>擁有</th><th>花瓣</th><th>精華</th>
+                        <th>擁有</th><th>精華</th><th>花瓣</th>
                     </tr>
                 </thead>
                 <tbody id="table-body"></tbody>
@@ -214,6 +212,7 @@ const defaultName = "皮克敏重度中毒者";
 let accounts = JSON.parse(localStorage.getItem('fh_accounts')) || [defaultName];
 let activeAcc = localStorage.getItem('fh_active_acc') || defaultName;
 
+// 遷移邏輯
 if (accounts.includes("預設帳號")) {
     const oldIdx = accounts.indexOf("預設帳號"); accounts[oldIdx] = defaultName;
     if (activeAcc === "預設帳號") activeAcc = defaultName;
@@ -269,16 +268,20 @@ function renderTable() {
         });
     }
 
+    // 更新標頭顯示（補完顏色標頭）
+    const theadRow2 = document.querySelector('thead tr:nth-child(2)');
+    theadRow2.innerHTML = `<th>擁有</th><th>精華</th><th>花瓣</th>`.repeat(4);
+
     tbody.innerHTML = sorted.map(f => {
         const cells = colorKeys.map(color => {
             if (!f.c.includes(color)) return `<td colspan="3" style="background:#f9f9f9; opacity:0.3"></td>`;
             const id = `${f.n}-${color}`;
             const d = getL(id);
             const cls = d.owned ? 'owned-cell' : '';
-            // 👑 數據欄位對調：e 在前，f 在後
+            // 數據：f 內部為精華, e 內部為花瓣
             return `<td class="${cls}" id="cell-check-${id}"><input type="checkbox" onchange="updateData('${id}','owned',this.checked)" ${d.owned?'checked':''}></td>
-                    <td class="${cls}" id="cell-e-${id}"><input type="number" value="${d.e}" oninput="updateData('${id}','e',this.value)" placeholder="0"></td>
-                    <td class="${cls}" id="cell-f-${id}"><input type="number" value="${d.f}" oninput="updateData('${id}','f',this.value)" placeholder="0"></td>`;
+                    <td class="${cls}" id="cell-f-${id}"><input type="number" value="${d.f}" oninput="updateData('${id}','f',this.value)" placeholder="0"></td>
+                    <td class="${cls}" id="cell-e-${id}"><input type="number" value="${d.e}" oninput="updateData('${id}','e',this.value)" placeholder="0"></td>`;
         }).join('');
         return `<tr><td class="name-td">${f.n}</td>${cells}</tr>`;
     }).join('');
@@ -303,7 +306,8 @@ function calculateStats() {
             }
         });
     });
-    document.getElementById('stat-percent').innerText = totalAll ? Math.round((ownedAll/totalAll)*100)+'%' : '0%';
+    const pct = totalAll ? Math.round((ownedAll/totalAll)*100) : 0;
+    document.getElementById('stat-percent').innerText = pct + '%';
     document.getElementById('stat-count').innerText = `${ownedAll} / ${totalAll}`;
     document.getElementById('progress-bar').style.width = (totalAll ? (ownedAll/totalAll*100) : 0)+'%';
     colorKeys.forEach(c => document.getElementById(`cs-val-${c}`).innerText = colorStats[c].t ? Math.round((colorStats[c].o/colorStats[c].t)*100)+'%' : '0%');
@@ -311,13 +315,12 @@ function calculateStats() {
 }
 
 function exportToExcel() {
-    // 👑 Excel 欄位同步對調：花瓣在前，精華在後
-    const data = [["帳號：", activeAcc], ["花卉名稱", "白色-擁有", "白色-花瓣", "白色-精華", "黃色-擁有", "黃色-花瓣", "黃色-精華", "紅色-擁有", "紅色-花瓣", "紅色-精華", "藍色-擁有", "藍色-花瓣", "藍色-精華"]];
+    const data = [["帳號：", activeAcc], ["花卉名稱", "白色-擁有", "白色-精華", "白色-花瓣", "黃色-擁有", "黃色-精華", "黃色-花瓣", "紅色-擁有", "紅色-精華", "紅色-花瓣", "藍色-擁有", "藍色-精華", "藍色-花瓣"]];
     flowersList.forEach(f => {
         const row = [f.n];
         colorKeys.forEach(c => {
             const d = f.c.includes(c) ? getL(`${f.n}-${c}`) : null;
-            row.push(d ? (d.owned?'V':'') : '-', d ? (d.e||0) : '-', d ? (d.f||0) : '-');
+            row.push(d ? (d.owned?'V':'') : '-', d ? (d.f||0) : '-', d ? (d.e||0) : '-');
         });
         data.push(row);
     });
@@ -342,8 +345,9 @@ function exportToImage() {
 
 function copyPrompt() { navigator.clipboard.writeText(document.getElementById('prompt-text').innerText).then(() => alert("指令已複製！")); }
 function clearTextarea() { document.getElementById('import-json').value = ''; }
-async function pasteFromClipboard() { try { const t = await navigator.clipboard.readText(); document.getElementById('import-json').value = t; alert("已貼上！"); } catch(e) { alert("請手動貼上。"); } }
+async function pasteFromClipboard() { try { const t = await navigator.clipboard.readText(); document.getElementById('import-json').value = t; alert("已貼上！"); } catch(e) { alert("請手動貼上代碼。"); } }
 
+// 👑 新導入邏輯：對齊指令定義 (f=花瓣, e=精華)
 function importData() {
     let raw = document.getElementById('import-json').value.trim();
     raw = raw.replace(/```json/gi, "").replace(/```/g, "").trim();
@@ -357,7 +361,11 @@ function importData() {
             if (pureName === "三色菫" || pureName === "三色堇菫") pureName = "三色堇";
             if (pureName === "碗豆花") pureName = "豌豆花"; if (pureName === "水仙") pureName = "水仙花";
             const id = `${pureName}-${item.c.charAt(0)}`;
-            let d = getL(id); d.owned = true; if(item.f!==undefined) d.f = item.f; if(item.e!==undefined) d.e = item.e;
+            let d = getL(id); 
+            d.owned = true; 
+            // 👑 對接指令：item.f(指令花瓣) -> d.e(內部花瓣); item.e(指令精華) -> d.f(內部精華)
+            if(item.f!==undefined) d.e = item.f; 
+            if(item.e!==undefined) d.f = item.e;
             setL(id, d);
         });
         renderTable(); alert("導入成功！");
