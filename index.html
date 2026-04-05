@@ -161,6 +161,12 @@
                 <optgroup label="單項花瓣排序 (少→多)">
                     <option value="e-白-asc">白：花瓣 (少→多)</option><option value="e-黃-asc">黃：花瓣 (少→多)</option><option value="e-紅-asc">紅：花瓣 (少→多)</option><option value="e-藍-asc">藍：花瓣 (少→多)</option>
                 </optgroup>
+                <optgroup label="單項總量排序(精華+花瓣) (少→多)">
+                    <option value="sum-白-asc">白：總量 (少→多)</option>
+                    <option value="sum-黃-asc">黃：總量 (少→多)</option>
+                    <option value="sum-紅-asc">紅：總量 (少→多)</option>
+                    <option value="sum-藍-asc">藍：總量 (少→多)</option>
+                </optgroup>
             </select>
             <button class="btn btn-green" onclick="exportToExcel()">📊 Excel 匯出</button>
             <button class="btn btn-sky" onclick="exportToImage()">🖼️ 儲存圖片</button>
@@ -212,7 +218,6 @@ const defaultName = "皮克敏重度中毒者";
 let accounts = JSON.parse(localStorage.getItem('fh_accounts')) || [defaultName];
 let activeAcc = localStorage.getItem('fh_active_acc') || defaultName;
 
-// 遷移邏輯
 if (accounts.includes("預設帳號")) {
     const oldIdx = accounts.indexOf("預設帳號"); accounts[oldIdx] = defaultName;
     if (activeAcc === "預設帳號") activeAcc = defaultName;
@@ -262,13 +267,21 @@ function renderTable() {
     } else if (sortVal.includes("-")) {
         const [type, color, dir] = sortVal.split("-");
         sorted.sort((a, b) => {
-            const vA = Number(getL(`${a.n}-${color}`)[type] || 0);
-            const vB = Number(getL(`${b.n}-${color}`)[type] || 0);
+            const dA = getL(`${a.n}-${color}`);
+            const dB = getL(`${b.n}-${color}`);
+            let vA, vB;
+            // 👑 處理新增的總量(精華+花瓣)排序邏輯
+            if (type === "sum") {
+                vA = Number(dA.f || 0) + Number(dA.e || 0);
+                vB = Number(dB.f || 0) + Number(dB.e || 0);
+            } else {
+                vA = Number(dA[type] || 0);
+                vB = Number(dB[type] || 0);
+            }
             return dir === "asc" ? vA - vB : vB - vA;
         });
     }
 
-    // 更新標頭顯示（補完顏色標頭）
     const theadRow2 = document.querySelector('thead tr:nth-child(2)');
     theadRow2.innerHTML = `<th>擁有</th><th>精華</th><th>花瓣</th>`.repeat(4);
 
@@ -278,7 +291,6 @@ function renderTable() {
             const id = `${f.n}-${color}`;
             const d = getL(id);
             const cls = d.owned ? 'owned-cell' : '';
-            // 數據：f 內部為精華, e 內部為花瓣
             return `<td class="${cls}" id="cell-check-${id}"><input type="checkbox" onchange="updateData('${id}','owned',this.checked)" ${d.owned?'checked':''}></td>
                     <td class="${cls}" id="cell-f-${id}"><input type="number" value="${d.f}" oninput="updateData('${id}','f',this.value)" placeholder="0"></td>
                     <td class="${cls}" id="cell-e-${id}"><input type="number" value="${d.e}" oninput="updateData('${id}','e',this.value)" placeholder="0"></td>`;
@@ -345,9 +357,8 @@ function exportToImage() {
 
 function copyPrompt() { navigator.clipboard.writeText(document.getElementById('prompt-text').innerText).then(() => alert("指令已複製！")); }
 function clearTextarea() { document.getElementById('import-json').value = ''; }
-async function pasteFromClipboard() { try { const t = await navigator.clipboard.readText(); document.getElementById('import-json').value = t; alert("已貼上！"); } catch(e) { alert("請手動貼上代碼。"); } }
+async function pasteFromClipboard() { try { const t = await navigator.clipboard.readText(); document.getElementById('import-json').value = t; alert("已貼上！"); } catch(e) { alert("請點擊後手動貼上。"); } }
 
-// 👑 新導入邏輯：對齊指令定義 (f=花瓣, e=精華)
 function importData() {
     let raw = document.getElementById('import-json').value.trim();
     raw = raw.replace(/```json/gi, "").replace(/```/g, "").trim();
@@ -363,9 +374,8 @@ function importData() {
             const id = `${pureName}-${item.c.charAt(0)}`;
             let d = getL(id); 
             d.owned = true; 
-            // 👑 對接指令：item.f(指令花瓣) -> d.e(內部花瓣); item.e(指令精華) -> d.f(內部精華)
-            if(item.f!==undefined) d.e = item.f; 
-            if(item.e!==undefined) d.f = item.e;
+            if(item.f!==undefined) d.e = item.f; // f(瓣)->e(內部)
+            if(item.e!==undefined) d.f = item.e; // e(精)->f(內部)
             setL(id, d);
         });
         renderTable(); alert("導入成功！");
